@@ -22,15 +22,20 @@ namespace UnitBrains.Player
             ///////////////////////////////////////
             // Homework 1.3 (1st block, 3rd module)
             ///////////////////////////////////////    
-            ///
-            IncreaseTemperature();
             int a = GetTemperature();
-            if (a >= 3f)
+
+            if (a >= overheatTemperature)
             {
                 return;
             }
-            var projectile = CreateProjectile(forTarget);
-            AddProjectileToList(projectile, intoList);
+
+            for (int i = 0; i < a; i++)
+            {
+                var projectile = CreateProjectile(forTarget);
+                AddProjectileToList(projectile, intoList);
+            }
+
+            IncreaseTemperature();
             ///////////////////////////////////////
             
         }
