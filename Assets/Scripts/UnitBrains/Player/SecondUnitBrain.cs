@@ -51,6 +51,23 @@ namespace UnitBrains.Player
                 result.RemoveAt(result.Count - 1);
             }
             return result;
+            float min = float.MaxValue;
+            float min1 = float.MinValue;
+
+            foreach (var vector2 in result)
+            {
+                if(vector2.x < min)
+                    min = vector2.x;
+                if (vector2.y < min1)
+                    min1 = vector2.y;
+
+            }
+            result.Clear();
+            result.Add(min);
+            result.Add(min1);
+            return result;  
+
+
             ///////////////////////////////////////
         }
 
