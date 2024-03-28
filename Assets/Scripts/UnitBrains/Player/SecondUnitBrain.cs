@@ -42,7 +42,21 @@ namespace UnitBrains.Player
 
         public override Vector2Int GetNextStep()
         {
-            return base.GetNextStep();
+
+            foreach (var cel in celi)
+            {
+                if (celi.Count == 0)
+                {
+
+                }
+                else
+                {
+                    Vector2Int position = Vector2Int.zero;
+                    Vector2Int nextPosition = Vector2Int.right;
+                    position = position.CalcNextStepTowards(nextPosition);
+                }
+            }
+
         }
 
         protected override List<Vector2Int> SelectTargets()
@@ -51,24 +65,38 @@ namespace UnitBrains.Player
             // Homework 1.4 (1st block, 4rd module)
             ///////////////////////////////////////
             List<Vector2Int> result = GetReachableTargets();
+            List<Vector2Int> celi = new List<Vector2Int>();
+            
             float min = float.MaxValue;
             Vector2Int bestTarget = Vector2Int.zero;
+            if (celi.Count == 0)
+            {
+                celi.Add(runtimeModel.RoMap.Bases(BotPlayerId));
+            }
 
-            foreach (var vector2  in result)
+            var vse = GetAllTargets();
+            foreach ( var vector2 in vse )
             {
                 var distance = DistanceToOwnBase(vector2);
 
                 if (distance < min)
                 {
                     min = distance;
-                    bestTarget = vector2;
+                    bestTarget = vector2;   
                 }
-                
+                else
+                {
+                    celi.Add(vector2);
+                }
             }
             result.Clear();
-            result.Add(bestTarget);
+            if (min < float.MaxValue)
+            {
+                result.Add(bestTarget);
+            }
             return result;
- 
+            return celi;
+           
         }
 
         public override void Update(float deltaTime, float time)
