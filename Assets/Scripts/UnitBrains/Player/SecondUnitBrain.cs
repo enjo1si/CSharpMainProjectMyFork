@@ -3,7 +3,9 @@ using ActionGameFramework.Projectiles;
 using Model.Runtime.Projectiles;
 using Unity.VisualScripting;
 using UnityEditor.SearchService;
+using UnityEditorInternal;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace UnitBrains.Player
 {
@@ -42,60 +44,57 @@ namespace UnitBrains.Player
 
         public override Vector2Int GetNextStep()
         {
-
-            foreach (var cel in celi)
+            foreach (var cel in _target)
             {
-                if (celi.Count == 0)
+                if (_target.Count > 0)
                 {
-
-                }
-                else
-                {
-                    Vector2Int position = Vector2Int.zero;
-                    Vector2Int nextPosition = Vector2Int.right;
-                    position = position.CalcNextStepTowards(nextPosition);
+                    Vector2Int pos = _target[0];
+                    pos = CalcNextStepTowards(pos);
                 }
             }
-
+            return pos;
         }
-
+        
         protected override List<Vector2Int> SelectTargets()
         {
             ///////////////////////////////////////
             // Homework 1.4 (1st block, 4rd module)
             ///////////////////////////////////////
             List<Vector2Int> result = GetReachableTargets();
-            List<Vector2Int> celi = new List<Vector2Int>();
+            List<Vector2Int> _targets = new List<Vector2Int>();
             
             float min = float.MaxValue;
+            float max = float.MinValue;
             Vector2Int bestTarget = Vector2Int.zero;
-            if (celi.Count == 0)
-            {
-                celi.Add(runtimeModel.RoMap.Bases(BotPlayerId));
-            }
 
-            var vse = GetAllTargets();
-            foreach ( var vector2 in vse )
+            var alltarg = GetAllTargets();
+            foreach ( var vector2 in alltarg )
             {
                 var distance = DistanceToOwnBase(vector2);
 
                 if (distance < min)
                 {
                     min = distance;
-                    bestTarget = vector2;   
+                    bestTarget = vector2;
                 }
-                else
+                if (distance > max)
                 {
-                    celi.Add(vector2);
+                    max = distance;
+                    bestTarget = vector2;
                 }
             }
-            result.Clear();
-            if (min < float.MaxValue)
+
+            _targets.Clear();
+            if (min < float.MaxValue)&(max > float.MinValue)
+            {
+                _targets.Add(bestTarget);
+            }
+            if (min < float.MaxValue)&(max <  float.MinValue) 
             {
                 result.Add(bestTarget);
             }
+            return _target;
             return result;
-            return celi;
            
         }
 
